@@ -3,7 +3,7 @@ import CountDown from "../components/CountDown";
 import Product from "../components/Product";
 
 const CountDownAndProducts: FC = () => {
-  const [viewProductState, setViewProductState] = useState("none");
+  const [viewProductState, setViewProductState] = useState(false);
 
   return (
     <div>
