@@ -7,12 +7,13 @@ const ProductMain = styled.div`
   padding: 1em;
   box-shadow: 1px 1px 9px -1px rgba(0, 0, 0, 0.12);
   margin: auto;
-  display: flex;
+  /* display: flex; */
   flex-wrap: wrap;
   justify-content: center;
 `;
+
 // 用到的几种容器样式
-const ProductContainerOne = styled.div`
+const ProductContainerOutside = styled.div`
   display: flex;
   flex: 1 1 auto;
   flex-direction: column;
@@ -21,7 +22,8 @@ const ProductContainerOne = styled.div`
   width: 155px;
   max-width: 250px;
 `;
-const ProductContainerTwo = styled.div`
+
+const SelectAndCount = styled.div`
   display: flex;
   justify-content: space-between;
   margin: 12px 0 0;
@@ -29,7 +31,7 @@ const ProductContainerTwo = styled.div`
   display: flex !important;
 `;
 
-const ProductContainerThree = styled.div`
+const Select = styled.div`
   ::before {
     content: "↓";
     position: absolute;
@@ -51,12 +53,14 @@ const ProductContainerThree = styled.div`
   outline: none;
   margin-right: 10px;
 `;
-const ProductContainerFour = styled.div`
+
+const Count = styled.div`
   display: flex;
 
   flex-direction: row;
 `;
-const ProductContainerFive = styled.div`
+
+const PriceAndDiscount = styled.div`
   font-size: 1.5em;
   font-weight: 600;
   margin: 12px 0 0;
@@ -68,14 +72,16 @@ const ProductContainerFive = styled.div`
   -webkit-box-pack: center;
   justify-content: center;
 `;
+
 // 顶部容器
-const ProductTop = styled.div`
+const ProductTopText = styled.div`
   font-size: 19.6px;
   padding: 0 0 1em;
   border-bottom: 1px solid rgba(0, 0, 0, 0.05);
   text-align: center;
   outline: none;
 `;
+
 // 下主体部分容器
 const ProductBody = styled.div`
   /* margin: auto;*/
@@ -84,6 +90,7 @@ const ProductBody = styled.div`
   flex-wrap: wrap;
   justify-content: center;
 `;
+
 // 图片
 const ProductImg = styled.img`
   width: 100%;
@@ -96,6 +103,7 @@ const ProductImg = styled.img`
   background-repeat: no-repeat;
   background-position: 50%;
 `;
+
 // 标题
 const ProductTitle = styled.div`
   font-size: 1rem !important;
@@ -106,6 +114,7 @@ const ProductTitle = styled.div`
   outline: none;
   text-align: center;
 `;
+
 // 选择部分
 const ProductSelect = styled.select`
   display: flex;
@@ -118,6 +127,7 @@ const ProductSelect = styled.select`
   border-radius: 4px;
   outline: none;
 `;
+
 const Button = styled.button`
   padding: 5px 10px;
   height: 39px;
@@ -139,8 +149,8 @@ const Input = styled.input`
   text-align: center;
   outline: none;
 `;
-// 价格部分
-const ProductPriceOne = styled.div`
+
+const ProductPrice = styled.div`
   color: #0773f1;
   margin-bottom: 9px;
   margin: 5px 5px 5px 0;
@@ -148,16 +158,18 @@ const ProductPriceOne = styled.div`
   font-weight: 600;
   text-align: center;
 `;
-const ProductPriceTwo = styled.div`
+
+const AfterDiscount = styled.div`
   color: #4a3636;
   text-decoration: line-through;
   margin-bottom: 9px;
   margin: 5px 5px 5px 0;
   font-size: 21px;
-  /* font-size: 1.5em; */
+
   font-weight: 600;
   text-align: center;
 `;
+
 const ProductDiscount = styled.div`
   font-size: 12px;
   border: 1px solid;
@@ -170,7 +182,6 @@ const ProductDiscount = styled.div`
   font-weight: 600;
 `;
 
-// 提交按钮
 const ProductAccept = styled.button`
   color: #fff;
   background-color: #0773f1;
@@ -190,13 +201,9 @@ const ProductAccept = styled.button`
   line-height: normal;
 `;
 
-// const [time, setTime] = useState({
-//   minutes: parseInt(minutes.toString()),
-//   seconds: parseInt(seconds.toString()),
-// });
 interface DisplayViewProductsProps {
-  viewProductState: string;
-  setViewProductState: (value: string) => void;
+  viewProductState: boolean;
+  setViewProductState: (value: boolean) => void;
 }
 const Product: FC<DisplayViewProductsProps> = ({
   viewProductState,
@@ -207,14 +214,7 @@ const Product: FC<DisplayViewProductsProps> = ({
   const [price, setPrice] = useState(data.variants[0].price);
   const [currentProduct, setCurrentProduct] = useState(data.variants[0]);
   const [number, setNumber] = useState(1);
-  // const [productNumber, setProductNumber] = useState(1);
-  // const handleChangeProduct = (event: ChangeEvent<HTMLSelectElement>) => {
-  //   data.variant.find((variant: any) => {
-  //     if (variant.id === JSON.parse(event.target.value)) {
-  //       setCurrentProduct(variant);
-  //     }
-  //   });
-  // };
+
   const Minus = () => {
     if (number > 1) {
       setNumber(number - 1);
@@ -228,28 +228,24 @@ const Product: FC<DisplayViewProductsProps> = ({
   };
   const handleChangeProduct = (event: ChangeEvent<HTMLSelectElement>) => {
     for (let i = 0; i < data.variants.length; i++) {
-      // console.log(data.variants[i]);
-
       if (data.variants[i].id === JSON.parse(event.target.value)) {
-        // setCurrentProduct(data[i].variant);
         setTitle(data.variants[i].title);
         setImage(data.images[i]);
         setCurrentProduct(data.variants[i]);
       }
     }
   };
-
-  // console.log(data);
+  console.log(data);
   return (
     <>
-      <ProductMain style={{ display: viewProductState }}>
-        <ProductTop>You have unlocked a 25% discount</ProductTop>
+      <ProductMain style={{ display: viewProductState ? "flex" : "none" }}>
+        <ProductTopText>You have unlocked a 25% discount</ProductTopText>
         <ProductBody>
-          <ProductContainerOne>
+          <ProductContainerOutside>
             <ProductImg src={image} />
             <ProductTitle>{title}</ProductTitle>
-            <ProductContainerTwo>
-              <ProductContainerThree>
+            <SelectAndCount>
+              <Select>
                 <ProductSelect onChange={handleChangeProduct}>
                   {data?.variants?.map((variant: any) => {
                     let options = "";
@@ -269,20 +265,20 @@ const Product: FC<DisplayViewProductsProps> = ({
                     );
                   })}
                 </ProductSelect>
-              </ProductContainerThree>
-              <ProductContainerFour>
+              </Select>
+              <Count>
                 <Button onClick={Minus}>-</Button>
                 <Input type="tel" min={number} value={number} />
                 <Button onClick={Plus}>+</Button>
-              </ProductContainerFour>
-            </ProductContainerTwo>
-            <ProductContainerFive>
-              <ProductPriceOne>${price * number}</ProductPriceOne>
-              <ProductPriceTwo>${price * number * 0.9}</ProductPriceTwo>
+              </Count>
+            </SelectAndCount>
+            <PriceAndDiscount>
+              <ProductPrice>${price}</ProductPrice>
+              <AfterDiscount>${price * 0.9}</AfterDiscount>
               <ProductDiscount>90% OFF</ProductDiscount>
-            </ProductContainerFive>
+            </PriceAndDiscount>
             <ProductAccept onClick={Click}>Accept</ProductAccept>
-          </ProductContainerOne>
+          </ProductContainerOutside>
         </ProductBody>
       </ProductMain>
     </>
