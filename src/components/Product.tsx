@@ -2,12 +2,12 @@ import React, { FC, useState, ChangeEvent } from "react";
 import styled, { css } from "styled-components";
 import data from "../data";
 // 主体
-const ProductMain = styled.div`
+const ProductMain = styled.div<{ viewProductState: boolean }>`
   flex-direction: column;
   padding: 1em;
   box-shadow: 1px 1px 9px -1px rgba(0, 0, 0, 0.12);
   margin: auto;
-  /* display: flex; */
+  display: ${(props) => (props.viewProductState ? "flex" : "none")};
   flex-wrap: wrap;
   justify-content: center;
 `;
@@ -214,6 +214,11 @@ const Product: FC<DisplayViewProductsProps> = ({
   const [price, setPrice] = useState(data.variants[0].price);
   const [currentProduct, setCurrentProduct] = useState(data.variants[0]);
   const [number, setNumber] = useState(1);
+  // const [option, setOption] = useState(
+  //   data.variants[0].option1 +
+  //     data.variants[0].option2 +
+  //     data.variants[0].option3
+  // );
 
   const Minus = () => {
     if (number > 1) {
@@ -232,13 +237,18 @@ const Product: FC<DisplayViewProductsProps> = ({
         setTitle(data.variants[i].title);
         setImage(data.images[i]);
         setCurrentProduct(data.variants[i]);
+        // setOption(
+        //   data.variants[i].option1 +
+        //     data.variants[i].option2 +
+        //     data.variants[i].option3
+        // );
       }
     }
   };
-  console.log(data);
+  // console.log(data);
   return (
     <>
-      <ProductMain style={{ display: viewProductState ? "flex" : "none" }}>
+      <ProductMain viewProductState={viewProductState}>
         <ProductTopText>You have unlocked a 25% discount</ProductTopText>
         <ProductBody>
           <ProductContainerOutside>

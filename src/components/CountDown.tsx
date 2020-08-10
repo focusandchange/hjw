@@ -4,13 +4,13 @@ import { useState } from "react";
 import moment from "moment";
 import "moment/locale/zh-cn";
 // import { queries } from "@testing-library/react";
-const Background = styled.div`
+const Background = styled.div<{ displayState: boolean }>`
   position: fixed;
   bottom: 0;
   height: 40px;
   width: 100%;
   background-color: black;
-  display: flex;
+  display: ${(props) => (props.displayState ? "flex" : "none")};
   align-items: center;
 `;
 
@@ -154,9 +154,9 @@ const CountDown: FC<DisplayViewProductsProps> = ({
       setViewProductState(false);
     }
   };
-
+  // style={{ display: displayState ? "flex" : "none" }}
   return (
-    <Background style={{ display: displayState ? "flex" : "none" }}>
+    <Background displayState={displayState}>
       <Discount>您的折扣已激活！</Discount>
       <Coupon>优惠券：XD64QZOB</Coupon>
       <CountDownDiv>
