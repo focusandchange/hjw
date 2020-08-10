@@ -1,6 +1,8 @@
 import React, { FC, useState, ChangeEvent } from "react";
 import styled, { css } from "styled-components";
 import data from "../data";
+import ProductPriceProps from "../components/ProductPriceProps";
+import ProductQuantityProps from "../components/ProductQuantityProps";
 // 主体
 const ProductMain = styled.div<{ viewProductState: boolean }>`
   flex-direction: column;
@@ -52,25 +54,6 @@ const Select = styled.div`
   text-align: center;
   outline: none;
   margin-right: 10px;
-`;
-
-const Count = styled.div`
-  display: flex;
-
-  flex-direction: row;
-`;
-
-const PriceAndDiscount = styled.div`
-  font-size: 1.5em;
-  font-weight: 600;
-  margin: 12px 0 0;
-  text-align: center;
-  display: flex;
-  flex-wrap: wrap;
-  -webkit-box-align: center;
-  align-items: center;
-  -webkit-box-pack: center;
-  justify-content: center;
 `;
 
 // 顶部容器
@@ -128,60 +111,6 @@ const ProductSelect = styled.select`
   outline: none;
 `;
 
-const Button = styled.button`
-  padding: 5px 10px;
-  height: 39px;
-  background: #ececec;
-
-  font-size: 17px;
-  border: none;
-  outline: none;
-  cursor: pointer;
-`;
-
-const Input = styled.input`
-  flex-shrink: 1;
-  width: 30px;
-  border-color: #e4e4e4 transparent;
-  border-style: solid;
-  border-width: 1px;
-  border-radius: 3px;
-  text-align: center;
-  outline: none;
-`;
-
-const ProductPrice = styled.div`
-  color: #0773f1;
-  margin-bottom: 9px;
-  margin: 5px 5px 5px 0;
-  font-size: 21px;
-  font-weight: 600;
-  text-align: center;
-`;
-
-const AfterDiscount = styled.div`
-  color: #4a3636;
-  text-decoration: line-through;
-  margin-bottom: 9px;
-  margin: 5px 5px 5px 0;
-  font-size: 21px;
-
-  font-weight: 600;
-  text-align: center;
-`;
-
-const ProductDiscount = styled.div`
-  font-size: 12px;
-  border: 1px solid;
-  border-radius: 50px;
-  padding: 3px 7px;
-  color: #0773f1;
-  margin-bottom: 9px;
-  margin: 5px 5px 5px 0;
-  text-align: center;
-  font-weight: 600;
-`;
-
 const ProductAccept = styled.button`
   color: #fff;
   background-color: #0773f1;
@@ -204,30 +133,34 @@ const ProductAccept = styled.button`
 interface DisplayViewProductsProps {
   viewProductState: boolean;
   setViewProductState: (value: boolean) => void;
+  discountRate: number;
+  setDiscountRate: (value: number) => void;
 }
+
 const Product: FC<DisplayViewProductsProps> = ({
   viewProductState,
   setViewProductState,
+  discountRate,
+  setDiscountRate,
 }) => {
   const [title, setTitle] = useState(data.variants[0].title);
   const [image, setImage] = useState(data.images[0]);
   const [price, setPrice] = useState(data.variants[0].price);
   const [currentProduct, setCurrentProduct] = useState(data.variants[0]);
   const [number, setNumber] = useState(1);
+  const [discountPrice, setDiscountPrice] = useState(price * discountRate + "");
+
   // const [option, setOption] = useState(
   //   data.variants[0].option1 +
   //     data.variants[0].option2 +
   //     data.variants[0].option3
   // );
-
-  const Minus = () => {
-    if (number > 1) {
-      setNumber(number - 1);
+  const onChange = (value: number) => {
+    if (value > 0) {
+      setNumber(value);
     }
   };
-  const Plus = () => {
-    setNumber(number + 1);
-  };
+
   const Click = () => {
     console.log("产品id：" + currentProduct.id + " 产品数量：" + number);
   };
@@ -237,6 +170,7 @@ const Product: FC<DisplayViewProductsProps> = ({
         setTitle(data.variants[i].title);
         setImage(data.images[i]);
         setCurrentProduct(data.variants[i]);
+        setPrice(data.variants[i].price);
         // setOption(
         //   data.variants[i].option1 +
         //     data.variants[i].option2 +
@@ -276,17 +210,17 @@ const Product: FC<DisplayViewProductsProps> = ({
                   })}
                 </ProductSelect>
               </Select>
-              <Count>
-                <Button onClick={Minus}>-</Button>
-                <Input type="tel" min={number} value={number} />
-                <Button onClick={Plus}>+</Button>
-              </Count>
+              <ProductQuantityProps
+                value={number}
+                onChange={onChange}
+              ></ProductQuantityProps>
             </SelectAndCount>
-            <PriceAndDiscount>
-              <ProductPrice>${price}</ProductPrice>
-              <AfterDiscount>${price * 0.9}</AfterDiscount>
-              <ProductDiscount>90% OFF</ProductDiscount>
-            </PriceAndDiscount>
+
+            <ProductPriceProps
+              originalPrice={price}
+              discountPrice={discountPrice}
+              discountRate={discountRate * 100}
+            ></ProductPriceProps>
             <ProductAccept onClick={Click}>Accept</ProductAccept>
           </ProductContainerOutside>
         </ProductBody>
