@@ -116,7 +116,6 @@ const CountDown: FC<DisplayViewProductsProps> = ({
   });
 
   const tick = () => {
-    console.log(customInterval);
     if (customInterval % 100 == 0) {
       if (time.minutes === 0 && time.seconds === 0) {
         setTime({
