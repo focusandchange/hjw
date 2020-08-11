@@ -64,6 +64,7 @@ let minutes;
 let seconds;
 const remainTime = localStorage.getItem("remainTime");
 const saveTime = localStorage.getItem("saveTime");
+const customIntervalSave = localStorage.getItem("customIntervalSave");
 
 function Welcome() {
   const nowTime = moment().format("X");
@@ -86,8 +87,15 @@ function getRemainsTime() {
     return parseInt(remainTime);
   }
 }
+function getCustomIntervalSave() {
+  if (customIntervalSave == null) {
+    return 0;
+  } else {
+    return parseInt(customIntervalSave);
+  }
+}
 const remainsTime = getRemainsTime();
-
+const customIntervalSaveReturn = getCustomIntervalSave();
 const timeMod = Math.abs(remainsTime - timeCalculate);
 window.onbeforeunload = onbeforeunload_handler;
 
@@ -109,14 +117,17 @@ const CountDown: FC<DisplayViewProductsProps> = ({
 
   const [over, setOver] = useState(false);
   const [displayState, setDisplayState] = useState(true);
-  const [customInterval, setCustomInterval] = useState(1);
+  const [customInterval, setCustomInterval] = useState(
+    customIntervalSaveReturn
+  );
   const [time, setTime] = useState({
     minutes: parseInt(minutes.toString()),
     seconds: parseInt(seconds.toString()),
   });
 
   const tick = () => {
-    if (customInterval % 100 == 0) {
+    // console.log(customInterval);
+    if (customInterval % 10 == 0) {
       if (time.minutes === 0 && time.seconds === 0) {
         setTime({
           minutes: 20,
@@ -135,15 +146,18 @@ const CountDown: FC<DisplayViewProductsProps> = ({
           seconds: time.seconds - 1,
         });
       }
+      setCustomInterval(customInterval + 1);
+    } else {
+      setCustomInterval(customInterval + 1);
     }
-    setCustomInterval(customInterval + 1);
   };
   localStorage.setItem(
     "remainTime",
     (time.minutes * 60 + time.seconds).toString()
   );
+  localStorage.setItem("customIntervalSave", customInterval.toString());
   React.useEffect(() => {
-    let timerID = setTimeout(() => tick(), 10);
+    let timerID = setTimeout(() => tick(), 100);
     return () => clearInterval(timerID);
   });
 
