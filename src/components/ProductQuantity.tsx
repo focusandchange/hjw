@@ -43,11 +43,14 @@ interface ProductQuantity {
 }
 
 const ProductQuantity: FC<ProductQuantity> = ({ value, onChange }) => {
+  function handleChange(e: ChangeEvent<HTMLInputElement>) {
+    onChange(parseInt(e.target.value));
+  }
   return (
     <>
       <Count>
         <Button onClick={() => onChange(value - 1)}>-</Button>
-        <Input type="number" value={value} />
+        <Input type="number" value={value} onChange={handleChange} />
         <Button onClick={() => onChange(value + 1)}>+</Button>
       </Count>
     </>
