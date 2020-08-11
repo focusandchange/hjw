@@ -37,15 +37,12 @@ const Input = styled.input`
   outline: none;
 `;
 
-interface ProductQuantityProps {
+interface ProductQuantity {
   value: number; // 初始的数量
   onChange: (value: number) => void; // 数量改变
 }
 
-const ProductQuantityProps: FC<ProductQuantityProps> = ({
-  value,
-  onChange,
-}) => {
+const ProductQuantity: FC<ProductQuantity> = ({ value, onChange }) => {
   return (
     <>
       <Count>
@@ -57,4 +54,4 @@ const ProductQuantityProps: FC<ProductQuantityProps> = ({
   );
 };
 
-export default ProductQuantityProps;
+export default ProductQuantity;

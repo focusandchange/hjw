@@ -1,6 +1,6 @@
 import React, { FC, useState, ChangeEvent } from "react";
 import styled, { css } from "styled-components";
-const ProductPricePropsMain = styled.div`
+const ProductPriceMain = styled.div`
   font-size: 1.5em;
   font-weight: 600;
   margin: 12px 0 0;
@@ -44,26 +44,26 @@ const DiscountRate = styled.div`
   text-align: center;
   font-weight: 600;
 `;
-interface ProductPriceProps {
+interface ProductPrice {
   originalPrice: string; // 原价
   discountPrice: string; // 折扣价
   discountRate: number; // 折扣率
 }
 
-const ProductPriceProps: FC<ProductPriceProps> = ({
+const ProductPrice: FC<ProductPrice> = ({
   originalPrice,
   discountPrice,
   discountRate,
 }) => {
   return (
     <>
-      <ProductPricePropsMain>
+      <ProductPriceMain>
         <OriginalPrice>${originalPrice}</OriginalPrice>
         <DiscountPrice>${discountPrice}</DiscountPrice>
         <DiscountRate>{discountRate + "% OFF"}</DiscountRate>
-      </ProductPricePropsMain>
+      </ProductPriceMain>
     </>
   );
 };
 
-export default ProductPriceProps;
+export default ProductPrice;

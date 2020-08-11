@@ -1,9 +1,11 @@
-import React, { FC, useState, ChangeEvent } from "react";
-import styled, { css } from "styled-components";
+import React, { FC, useState } from "react";
+import styled from "styled-components";
 import data from "../data";
-import ProductPriceProps from "../components/ProductPriceProps";
-import ProductQuantityProps from "../components/ProductQuantityProps";
+import ProductPrice from "../components/ProductPrice";
+import ProductQuantity from "../components/ProductQuantity";
+import ProductSelectComponent from "../components/ProductSelectComponent";
 // 主体
+
 const ProductMain = styled.div<{ viewProductState: boolean }>`
   flex-direction: column;
   padding: 1em;
@@ -99,17 +101,6 @@ const ProductTitle = styled.div`
 `;
 
 // 选择部分
-const ProductSelect = styled.select`
-  display: flex;
-  border: none;
-  width: 100%;
-  padding: 10px 30px 10px 10px;
-  align-items: center;
-  justify-content: center;
-  appearance: none;
-  border-radius: 4px;
-  outline: none;
-`;
 
 const ProductAccept = styled.button`
   color: #fff;
@@ -146,7 +137,7 @@ const Product: FC<DisplayViewProductsProps> = ({
   const [title, setTitle] = useState(data.variants[0].title);
   const [image, setImage] = useState(data.images[0]);
   const [price, setPrice] = useState(data.variants[0].price);
-  const [currentProduct, setCurrentProduct] = useState(data.variants[0]);
+  const [currentProductId, setCurrentProductId] = useState(data.variants[0].id);
   const [number, setNumber] = useState(1);
   const [discountPrice, setDiscountPrice] = useState(price * discountRate + "");
 
@@ -162,23 +153,19 @@ const Product: FC<DisplayViewProductsProps> = ({
   };
 
   const Click = () => {
-    console.log("产品id：" + currentProduct.id + " 产品数量：" + number);
+    console.log("产品id：" + currentProductId + " 产品数量：" + number);
   };
-  const handleChangeProduct = (event: ChangeEvent<HTMLSelectElement>) => {
+  const handleChangeProduct = (variantsId: string) => {
     for (let i = 0; i < data.variants.length; i++) {
-      if (data.variants[i].id === JSON.parse(event.target.value)) {
+      if (data.variants[i].id === JSON.parse(variantsId)) {
         setTitle(data.variants[i].title);
         setImage(data.images[i]);
-        setCurrentProduct(data.variants[i]);
+        setCurrentProductId(data.variants[i].id);
         setPrice(data.variants[i].price);
-        // setOption(
-        //   data.variants[i].option1 +
-        //     data.variants[i].option2 +
-        //     data.variants[i].option3
-        // );
       }
     }
   };
+
   // console.log(data);
   return (
     <>
@@ -190,37 +177,23 @@ const Product: FC<DisplayViewProductsProps> = ({
             <ProductTitle>{title}</ProductTitle>
             <SelectAndCount>
               <Select>
-                <ProductSelect onChange={handleChangeProduct}>
-                  {data?.variants?.map((variant: any) => {
-                    let options = "";
-                    if (variant.option1) {
-                      options += variant.option1 + "/";
-                    }
-                    if (variant.option2) {
-                      options += variant.option2;
-                    }
-                    if (variant.option3) {
-                      options += "/" + variant.option3;
-                    }
-                    return (
-                      <option key={variant.id} value={variant.id}>
-                        {options}
-                      </option>
-                    );
-                  })}
-                </ProductSelect>
+                <ProductSelectComponent
+                  variants={data.variants}
+                  value={currentProductId}
+                  onChange={handleChangeProduct}
+                ></ProductSelectComponent>
               </Select>
-              <ProductQuantityProps
+              <ProductQuantity
                 value={number}
                 onChange={onChange}
-              ></ProductQuantityProps>
+              ></ProductQuantity>
             </SelectAndCount>
 
-            <ProductPriceProps
+            <ProductPrice
               originalPrice={price}
               discountPrice={discountPrice}
               discountRate={discountRate * 100}
-            ></ProductPriceProps>
+            ></ProductPrice>
             <ProductAccept onClick={Click}>Accept</ProductAccept>
           </ProductContainerOutside>
         </ProductBody>
