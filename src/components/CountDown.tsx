@@ -65,9 +65,22 @@ let seconds;
 const remainTime = localStorage.getItem("remainTime");
 const saveTime = localStorage.getItem("saveTime");
 
-window.onunload = onunload_handler;
+// window.onunload = onunload_handler;
 
-function onunload_handler() {
+// function onunload_handler() {
+//   const nowTime = moment().format("X");
+
+//   let timeCalculate;
+//   if (saveTime == null) {
+//     timeCalculate = 0;
+//   } else {
+//     timeCalculate = parseInt(nowTime) - parseInt(saveTime);
+//   }
+
+//   return timeCalculate;
+// }
+// const timeCalculate = onunload_handler();
+function Welcome() {
   const nowTime = moment().format("X");
 
   let timeCalculate;
@@ -79,7 +92,7 @@ function onunload_handler() {
 
   return timeCalculate;
 }
-const timeCalculate = onunload_handler();
+const timeCalculate = Welcome();
 
 function getRemainsTime() {
   if (remainTime == null) {
@@ -111,38 +124,41 @@ const CountDown: FC<DisplayViewProductsProps> = ({
 
   const [over, setOver] = useState(false);
   const [displayState, setDisplayState] = useState(true);
-
+  const [customInterval, setCustomInterval] = useState(0);
   const [time, setTime] = useState({
     minutes: parseInt(minutes.toString()),
     seconds: parseInt(seconds.toString()),
   });
 
   const tick = () => {
-    if (time.minutes === 0 && time.seconds === 0) {
-      setTime({
-        minutes: 20,
-        seconds: 0,
-      });
+    if (customInterval % 10 == 0) {
+      if (time.minutes === 0 && time.seconds === 0) {
+        setTime({
+          minutes: 20,
+          seconds: 0,
+        });
 
-      setOver(true);
-    } else if (time.seconds === 0) {
-      setTime({
-        minutes: time.minutes - 1,
-        seconds: 59,
-      });
-    } else {
-      setTime({
-        minutes: time.minutes,
-        seconds: time.seconds - 1,
-      });
+        setOver(true);
+      } else if (time.seconds === 0) {
+        setTime({
+          minutes: time.minutes - 1,
+          seconds: 59,
+        });
+      } else {
+        setTime({
+          minutes: time.minutes,
+          seconds: time.seconds - 1,
+        });
+      }
     }
+    setCustomInterval(customInterval + 1);
   };
   localStorage.setItem(
     "remainTime",
     (time.minutes * 60 + time.seconds).toString()
   );
   React.useEffect(() => {
-    let timerID = setTimeout(() => tick(), 1000);
+    let timerID = setTimeout(() => tick(), 100);
     return () => clearInterval(timerID);
   });
 
