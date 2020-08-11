@@ -64,7 +64,9 @@ let minutes;
 let seconds;
 const remainTime = localStorage.getItem("remainTime");
 const saveTime = localStorage.getItem("saveTime");
+
 window.onunload = onunload_handler;
+
 function onunload_handler() {
   const nowTime = moment().format("X");
 
@@ -77,6 +79,7 @@ function onunload_handler() {
 
   return timeCalculate;
 }
+const timeCalculate = onunload_handler();
 
 function getRemainsTime() {
   if (remainTime == null) {
@@ -86,7 +89,6 @@ function getRemainsTime() {
   }
 }
 const remainsTime = getRemainsTime();
-const timeCalculate = onunload_handler();
 
 const timeMod = Math.abs(remainsTime - timeCalculate);
 window.onbeforeunload = onbeforeunload_handler;
@@ -140,7 +142,7 @@ const CountDown: FC<DisplayViewProductsProps> = ({
     (time.minutes * 60 + time.seconds).toString()
   );
   React.useEffect(() => {
-    let timerID = setInterval(() => tick(), 1000);
+    let timerID = setTimeout(() => tick(), 1000);
     return () => clearInterval(timerID);
   });
 

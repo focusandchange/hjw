@@ -142,11 +142,6 @@ const Product: FC<DisplayViewProductsProps> = ({
   const [number, setNumber] = useState(1);
   const [discountPrice, setDiscountPrice] = useState(price * discountRate + "");
 
-  // const [option, setOption] = useState(
-  //   data.variants[0].option1 +
-  //     data.variants[0].option2 +
-  //     data.variants[0].option3
-  // );
   const onChange = (value: number) => {
     if (value > 0) {
       setNumber(value);
